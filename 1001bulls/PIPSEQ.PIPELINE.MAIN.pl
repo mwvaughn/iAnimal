@@ -94,3 +94,8 @@ foreach my $cmd2 (@poststack)
 	report($cmd2);
 	system($cmd2);
 }
+
+sub report {
+	print STDERR join(" ", @_), "\n";
+	return 1;
+}
