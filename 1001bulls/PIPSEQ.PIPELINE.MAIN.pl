@@ -66,10 +66,10 @@ open (GENE, "<$coveragefile"); #open and loop through the coverage file
 while(my $finput = <GENE>)
 {
   	chomp $finput;
-  	@inputArray = split(/\n/, $finput);
-  	foreach $inputLine(@inputArray)
+  	my @inputArray = split(/\n/, $finput);
+  	foreach my $inputLine(@inputArray)
   	{
-    	@lineSplit = split(/\t/, $inputLine);
+    	my @lineSplit = split(/\t/, $inputLine);
     	if($lineSplit[0] eq "Total")
     		{$coverage = int($lineSplit[2]);} #find and assign the coverage calculation to the coverage variable
   	}
