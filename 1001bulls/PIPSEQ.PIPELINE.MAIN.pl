@@ -36,7 +36,7 @@ my $gatkINDEL = "GATK.INDELS.".$time.".vcf";
 #import the user imput and assign to variables
 GetOptions('readtype|t=s' => \$readType, 'reference|r=s' => \$reference, 'input1|1=s' => \$input1, 'input2|2=s' => \$input2, 'platform|p=s' => \$platform, 'animalnumber|n=s' => \$animalNumber);
 	
-push(@prestack, "$bwa aln $reference $input1 > $temp1sai"); #add the first bwa command to the stack
+push(@prestack, "$bwa aln -t 6 $reference $input1 > $temp1sai"); #add the first bwa command to the stack
 
 if($readType eq "SE")
 {
