@@ -35,8 +35,8 @@ my $gatkINDEL = "GATK.INDELS.".$time.".vcf";
 
 #import the user imput and assign to variables
 GetOptions('readtype|t=s' => \$readType, 'reference|r=s' => \$reference, 'input1|1=s' => \$input1, 'input2|2=s' => \$input2, 'platform|p=s' => \$platform, 'animalnumber|n=s' => \$animalNumber);
-	
-push(@prestack, "$bwa aln -t 6 $reference $input1 > $temp1sai"); #add the first bwa command to the stack
+
+push(@prestack, "$bwa aln -t 5 $reference $input1 > $temp1sai"); #add the first bwa command to the stack
 
 if($readType eq "SE")
 {
@@ -50,8 +50,8 @@ elsif($readType eq "PE")
 		
 push(@prestack, "$samtools view -bT $reference $outsam > $outbam"); #add the samtools conversion from sam to bam to the stack
 push(@prestack, "$samtools sort $outbam bwa_output.sorted"); #add the samtools sort of bam to the stack
-push(@prestack, "$samtools index $outsorted"); #add the samtools index of bam to the stack
-push(@prestack, "java -jar $aorrg INPUT=$outsorted OUTPUT=$picardbam VALIDATION_STRINGENCY=SILENT RGLB=1 RGPL=$platform RGPU=allruns RGSM= "); #add the picard AddOrReplaceReadGroups.jar command to the stack
+push(@prestack, "$samtools index bwa_output.sorted.bam"); #add the samtools index of bam to the stack
+push(@prestack, "java -jar $aorrg INPUT=bwa_output.sorted.bam OUTPUT=$picardbam VALIDATION_STRINGENCY=SILENT RGLB=1 RGPL=$platform RGPU=allruns RGSM= "); #add the picard AddOrReplaceReadGroups.jar command to the stack
 push(@prestack, "$samtools index $picardbam"); #add the samtools index of the corrected bam to the stack
 push(@prestack, "java -jar $gatk -R $reference -T DepthOfCoverage -o $precoverage -I $picardbam --omitDepthOutputAtEachBase --omitIntervalStatistics --omitLocusTable"); #add the GenomeAnalysisTK.jar coverage calculation to the stack
 
