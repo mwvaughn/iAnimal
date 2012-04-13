@@ -1,14 +1,14 @@
-#!/usr/bin/perl
+#!/bin/env perl
 
 use warnings;
 use strict;
 use Getopt::Long;
 
 # Declare paths at start
-my $bwa = "/usr/local3/bin/bwa-0.6.1/bwa"; #pathway to bwa software
-my $samtools = "/usr/local3/bin/samtools-0.1.18/samtools"; #pathway to samtools software
-my $aorrg = "/usr/local3/bin/picard-tools-1.64/AddOrReplaceReadGroups.jar"; #pathway to AddOrReplaceReadGroups.jar file of the picard suite
-my $gatk = "/usr/local3/bin/GenomeAnalysisTK-1.5-9-ga05a7f2/GenomeAnalysisTK.jar"; #pathway to GenomeAnalysisTK.jar file of the GenomeAnalysisTK suite
+my $bwa = "$ENV{'TACC_BWA_DIR'}/bwa"; #pathway to bwa software
+my $samtools = "$ENV{'TACC_SAMTOOLS_DIR'}/samtools"; #pathway to samtools software
+my $aorrg = "$ENV{'TACC_PICARD_DIR'}/AddOrReplaceReadGroups.jar"; #pathway to AddOrReplaceReadGroups.jar file of the picard suite
+my $gatk = "$ENV{'TACC_GATK_DIR'}/GenomeAnalysisTK.jar"; #pathway to GenomeAnalysisTK.jar file of the GenomeAnalysisTK suite
 
 my $readType = ""; #variable to capture read type input
 my $input1 = ""; #variable to capture first read file
@@ -36,7 +36,7 @@ my $gatkINDEL = "GATK.INDELS.".$time.".vcf";
 #import the user imput and assign to variables
 GetOptions('readtype|t=s' => \$readType, 'reference|r=s' => \$reference, 'input1|1=s' => \$input1, 'input2|2=s' => \$input2, 'platform|p=s' => \$platform, 'animalnumber|n=s' => \$animalNumber);
 
-push(@prestack, "$bwa aln -t 5 $reference $input1 > $temp1sai"); #add the first bwa command to the stack
+push(@prestack, "$bwa aln -t 6 $reference $input1 > $temp1sai"); #add the first bwa command to the stack
 
 if($readType eq "SE")
 {
@@ -44,7 +44,7 @@ if($readType eq "SE")
 }
 elsif($readType eq "PE")
 {
-	push(@prestack, "$bwa aln $reference $input2 > $temp2sai"); #add the next bwa command to the stack if paired-end reads used
+	push(@prestack, "$bwa aln -t 6 $reference $input2 > $temp2sai"); #add the next bwa command to the stack if paired-end reads used
 	push(@prestack, "$bwa sampe $reference $temp1sai $temp2sai $input1 $input2 > $outsam"); #add the final bwa command to the stack if paired-end reads used
 }
 		
