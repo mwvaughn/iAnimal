@@ -48,7 +48,7 @@ elsif($readType eq "PE")
 	push(@prestack, "$bwa sampe $reference $temp1sai $temp2sai $input1 $input2 > $outsam"); #add the final bwa command to the stack if paired-end reads used
 }
 
-push(@prestack, "awk '{if(($3!=\"*\") || ($1==\"\@HD\") || ($1==\"\@SQ\") || ($1==\"\@RG\") || ($1==\"PG\")) print $0}' $outsam > mapped.$outsam"); # remove unmapped reads entirely from SAM file. This gets around the current dog fight over the proper behavior of hanging reads
+push(@prestack, "awk '{if((\$3!=\"*\") || (\$1==\"\@HD\") || (\$1==\"\@SQ\") || (\$1==\"\@RG\") || (\$1==\"PG\")) print \$0}' $outsam > mapped.$outsam"); # remove unmapped reads entirely from SAM file. This gets around the current dog fight over the proper behavior of hanging reads
 push(@prestack, "$samtools view -bT $reference mapped.$outsam > $outbam"); #add the samtools conversion from sam to bam to the stack
 push(@prestack, "$samtools sort $outbam bwa_output.sorted"); #add the samtools sort of bam to the stack
 push(@prestack, "$samtools index bwa_output.sorted.bam"); #add the samtools index of bam to the stack
