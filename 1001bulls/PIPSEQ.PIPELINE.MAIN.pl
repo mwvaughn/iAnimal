@@ -48,13 +48,12 @@ elsif($readType eq "PE")
 	push(@prestack, "$bwa sampe $reference $temp1sai $temp2sai $input1 $input2 > $outsam"); #add the final bwa command to the stack if paired-end reads used
 }
 
-push(@prestack, "awk '{if((\$3!=\"*\") || (\$1==\"\@HD\") || (\$1==\"\@SQ\") || (\$1==\"\@RG\") || (\$1==\"PG\")) print \$0}' $outsam > mapped.$outsam"); # remove unmapped reads entirely from SAM file. This gets around the current dog fight over the proper behavior of hanging reads
-push(@prestack, "$samtools view -bT $reference mapped.$outsam > $outbam"); #add the samtools conversion from sam to bam to the stack
+push(@prestack, "$samtools view -F 4 -bT $reference mapped.$outsam > $outbam"); #add the samtools conversion from sam to bam to the stack; added filter -F to remove reads with 0x4 bit set
 push(@prestack, "$samtools sort -m 5000000000 $outbam bwa_output.sorted"); #add the samtools sort of bam to the stack
 push(@prestack, "$samtools index bwa_output.sorted.bam"); #add the samtools index of bam to the stack
 push(@prestack, "java -jar $aorrg INPUT=bwa_output.sorted.bam OUTPUT=$picardbam VALIDATION_STRINGENCY=SILENT RGLB=1 RGPL=$platform RGPU=allruns RGSM= "); #add the picard AddOrReplaceReadGroups.jar command to the stack
 push(@prestack, "$samtools index $picardbam"); #add the samtools index of the corrected bam to the stack
-push(@prestack, "java -jar $gatk --num_threads 12 -R $reference -T DepthOfCoverage -o $precoverage -I $picardbam --omitDepthOutputAtEachBase --omitIntervalStatistics --omitLocusTable"); #add the GenomeAnalysisTK.jar coverage calculation to the stack
+push(@prestack, "java -jar $gatk --num_threads 6 -R $reference -T DepthOfCoverage -o $precoverage -I $picardbam --omitDepthOutputAtEachBase --omitIntervalStatistics --omitLocusTable"); #add the GenomeAnalysisTK.jar coverage calculation to the stack
 
 #loop through and run the pre-coverage commands
 foreach my $cmd (@prestack)
