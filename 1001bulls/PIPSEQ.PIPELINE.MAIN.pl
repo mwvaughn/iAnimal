@@ -36,7 +36,7 @@ my $gatkINDEL = "GATK.INDELS.".$time.".vcf";
 #import the user imput and assign to variables
 GetOptions('readtype|t=s' => \$readType, 'reference|r=s' => \$reference, 'input1|1=s' => \$input1, 'input2|2=s' => \$input2, 'platform|p=s' => \$platform, 'animalnumber|n=s' => \$animalNumber);
 
-push(@prestack, "$bwa aln -t 5 $reference $input1 > $temp1sai"); #add the first bwa command to the stack
+push(@prestack, "$bwa aln -t 6 $reference $input1 > $temp1sai"); #add the first bwa command to the stack
 
 if($readType eq "SE")
 {
@@ -47,8 +47,9 @@ elsif($readType eq "PE")
 	push(@prestack, "$bwa aln $reference $input2 > $temp2sai"); #add the next bwa command to the stack if paired-end reads used
 	push(@prestack, "$bwa sampe $reference $temp1sai $temp2sai $input1 $input2 > $outsam"); #add the final bwa command to the stack if paired-end reads used
 }
-		
-push(@prestack, "$samtools view -bT $reference $outsam > $outbam"); #add the samtools conversion from sam to bam to the stack
+
+push(@prestack, "awk '{if(($3!=\"*\") || ($1==\"\@HD\") || ($1==\"\@SQ\") || ($1==\"\@RG\") || ($1==\"PG\")) print $0}' $outsam > mapped.$outsam"); # remove unmapped reads entirely from SAM file. This gets around the current dog fight over the proper behavior of hanging reads
+push(@prestack, "$samtools view -bT $reference mapped.$outsam > $outbam"); #add the samtools conversion from sam to bam to the stack
 push(@prestack, "$samtools sort $outbam bwa_output.sorted"); #add the samtools sort of bam to the stack
 push(@prestack, "$samtools index bwa_output.sorted.bam"); #add the samtools index of bam to the stack
 push(@prestack, "java -jar $aorrg INPUT=bwa_output.sorted.bam OUTPUT=$picardbam VALIDATION_STRINGENCY=SILENT RGLB=1 RGPL=$platform RGPU=allruns RGSM= "); #add the picard AddOrReplaceReadGroups.jar command to the stack
