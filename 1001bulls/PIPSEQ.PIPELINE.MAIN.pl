@@ -54,7 +54,7 @@ push(@prestack, "$samtools sort -m 5000000000 $outbam bwa_output.sorted"); #add 
 push(@prestack, "$samtools index bwa_output.sorted.bam"); #add the samtools index of bam to the stack
 push(@prestack, "java -jar $aorrg INPUT=bwa_output.sorted.bam OUTPUT=$picardbam VALIDATION_STRINGENCY=SILENT RGLB=1 RGPL=$platform RGPU=allruns RGSM= "); #add the picard AddOrReplaceReadGroups.jar command to the stack
 push(@prestack, "$samtools index $picardbam"); #add the samtools index of the corrected bam to the stack
-push(@prestack, "java -jar $gatk -R $reference -T DepthOfCoverage -o $precoverage -I $picardbam --omitDepthOutputAtEachBase --omitIntervalStatistics --omitLocusTable"); #add the GenomeAnalysisTK.jar coverage calculation to the stack
+push(@prestack, "java -jar $gatk --num_threads 12 -R $reference -T DepthOfCoverage -o $precoverage -I $picardbam --omitDepthOutputAtEachBase --omitIntervalStatistics --omitLocusTable"); #add the GenomeAnalysisTK.jar coverage calculation to the stack
 
 #loop through and run the pre-coverage commands
 foreach my $cmd (@prestack)
