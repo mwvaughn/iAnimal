@@ -48,7 +48,7 @@ elsif($readType eq "PE")
 	push(@prestack, "$bwa sampe $reference $temp1sai $temp2sai $input1 $input2 > $outsam"); #add the final bwa command to the stack if paired-end reads used
 }
 
-push(@prestack, "$samtools view -F 4 -bT $reference mapped.$outsam > $outbam"); #add the samtools conversion from sam to bam to the stack; added filter -F to remove reads with 0x4 bit set
+push(@prestack, "$samtools view -F 4 -bT $reference $outsam > $outbam"); #add the samtools conversion from sam to bam to the stack; added filter -F to remove reads with 0x4 bit set
 push(@prestack, "$samtools sort -m 5000000000 $outbam bwa_output.sorted"); #add the samtools sort of bam to the stack
 push(@prestack, "$samtools index bwa_output.sorted.bam"); #add the samtools index of bam to the stack
 push(@prestack, "java -jar $aorrg INPUT=bwa_output.sorted.bam OUTPUT=$picardbam VALIDATION_STRINGENCY=SILENT RGLB=1 RGPL=$platform RGPU=allruns RGSM= "); #add the picard AddOrReplaceReadGroups.jar command to the stack
