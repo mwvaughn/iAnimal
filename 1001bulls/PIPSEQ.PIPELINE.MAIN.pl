@@ -50,7 +50,7 @@ elsif($readType eq "PE")
 
 push(@prestack, "awk '{if((\$3!=\"*\") || (\$1==\"\@HD\") || (\$1==\"\@SQ\") || (\$1==\"\@RG\") || (\$1==\"PG\")) print \$0}' $outsam > mapped.$outsam"); # remove unmapped reads entirely from SAM file. This gets around the current dog fight over the proper behavior of hanging reads
 push(@prestack, "$samtools view -bT $reference mapped.$outsam > $outbam"); #add the samtools conversion from sam to bam to the stack
-push(@prestack, "$samtools sort $outbam bwa_output.sorted"); #add the samtools sort of bam to the stack
+push(@prestack, "$samtools sort -m 5000000000 $outbam bwa_output.sorted"); #add the samtools sort of bam to the stack
 push(@prestack, "$samtools index bwa_output.sorted.bam"); #add the samtools index of bam to the stack
 push(@prestack, "java -jar $aorrg INPUT=bwa_output.sorted.bam OUTPUT=$picardbam VALIDATION_STRINGENCY=SILENT RGLB=1 RGPL=$platform RGPU=allruns RGSM= "); #add the picard AddOrReplaceReadGroups.jar command to the stack
 push(@prestack, "$samtools index $picardbam"); #add the samtools index of the corrected bam to the stack
