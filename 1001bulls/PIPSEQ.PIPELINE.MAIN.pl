@@ -78,14 +78,14 @@ while(my $finput = <GENE>)
 if($coverage >= 10) #if the coverage calculated is higher than 10 use the following commands
 {
 	#adds the SNP and the INDEL commands to the stack
-	push(@poststack, "java -jar $gatk -R $reference -T UnifiedGenotyper -I $picardbam -o $gatkSNP -stand_call_conf 30.0 -stand_emit_conf 0.0 -dcov $coverage");
-	push(@poststack, "java -jar $gatk -R $reference -T UnifiedGenotyper -I $picardbam -o $gatkINDEL -glm INDEL -stand_call_conf 30.0 -stand_emit_conf 0.0 -dcov $coverage");
+	push(@poststack, "java -jar $gatk -R $reference -T UnifiedGenotyper -I $picardbam -o $gatkSNP -stand_call_conf 30.0 -dcov $coverage");
+	push(@poststack, "java -jar $gatk -R $reference -T UnifiedGenotyper -I $picardbam -o $gatkINDEL -glm INDEL -stand_call_conf 30.0 -dcov $coverage");
 }
 else
 {
 	#adds the SNP and the INDEL commands to the stack
-	push(@poststack, "java -jar $gatk -R $reference -T UnifiedGenotyper -I $picardbam -o $gatkSNP -stand_call_conf 4.0 -stand_emit_conf 0.0 -dcov $coverage");
-	push(@poststack, "java -jar $gatk -R $reference -T UnifiedGenotyper -I $picardbam -o $gatkINDEL -glm INDEL -stand_call_conf 4.0 -stand_emit_conf 0.0 -dcov $coverage");
+	push(@poststack, "java -jar $gatk -R $reference -T UnifiedGenotyper -I $picardbam -o $gatkSNP -stand_call_conf 4.0 -dcov 5");
+	push(@poststack, "java -jar $gatk -R $reference -T UnifiedGenotyper -I $picardbam -o $gatkINDEL -glm INDEL -stand_call_conf 4.0 -dcov 5");
 }
 
 #loop through and run the post-coverage commands
