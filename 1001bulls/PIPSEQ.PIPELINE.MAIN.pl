@@ -8,7 +8,7 @@ use Getopt::Long;
 my $bwa = "/usr/local3/bin/bwa-0.6.1/bwa"; #pathway to bwa software
 my $samtools = "/usr/local3/bin/samtools-0.1.18/samtools"; #pathway to samtools software
 my $aorrg = "/usr/local3/bin/picard-tools-1.64/AddOrReplaceReadGroups.jar"; #pathway to AddOrReplaceReadGroups.jar file of the picard suite
-my $gatk = "/usr/local3/bin/GenomeAnalysisTK-1.5-9-ga05a7f2/GenomeAnalysisTK.jar"; #pathway to GenomeAnalysisTK.jar file of the GenomeAnalysisTK suite
+my $gatk = "/usr/local3/bin/GenomeAnalysisTK-1.5-31-gadad76b/GenomeAnalysisTK.jar"; #pathway to GenomeAnalysisTK.jar file of the GenomeAnalysisTK suite
 
 my $readType = ""; #variable to capture read type input
 my $input1 = ""; #variable to capture first read file
